@@ -1,0 +1,52 @@
+#!/usr/bin/bash
+function Mcpp() {
+        name="$1";
+        g++ "$name" -o "${name%.*}"
+}
+
+function Rcpp() {
+	set -m
+        Mcpp "$1";
+        if [ -f "${1%.*}" ]; then
+                ./"${1%.*}"
+        fi
+        if [ -f "${1%.*}" ]; then
+                rm "${1%.*}"
+        fi
+}
+
+function Mc() {
+        name="$1";
+        gcc "$name" -o "${name%.*}" -lm
+}
+
+function Rc() {
+	set -m
+        Mc "$1";
+        if [ -f "${1%.*}" ]; then
+                ./"${1%.*}"
+        fi
+
+        rm "${1%.*}"
+
+}
+
+function run() {
+        set -m
+        extension="${1#*.}";
+        if [[ "$extension" == "cpp" ]]; then
+                Rcpp "$1"
+        elif [[ "$extension" == "c" ]]; then
+                Rc "$1"
+        elif [[ "$extension" == "py" ]]; then
+                python3 "$1"
+        elif [[ "$extension" == "go" ]]; then
+                go run "$1"
+        elif [[ "$extension" == "rb" ]]; then
+                ruby "$1"
+        elif [[ "$extension" == "js" ]]; then
+                node "$1"
+        fi
+}
+
+run
