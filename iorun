@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 function Mcpp() {
         name="$1";
-        g++ "$name" -o "${name%.*}"
+        g++ "$name" -o "${name%.*}" -Wall
 }
 
 function Rcpp() {
@@ -16,7 +16,7 @@ function Rcpp() {
 
 function Mc() {
         name="$1";
-        gcc "$name" -o "${name%.*}" -lm
+        gcc "$name" -o "${name%.*}" -lm -Wall
 }
 
 function Rc() {
@@ -24,9 +24,9 @@ function Rc() {
         if [ -f "${1%.*}" ]; then
                 ./"${1%.*}"
         fi
-
-        rm "${1%.*}"
-
+        if [ -f "${1%.*}" ]; then
+                rm "${1%.*}"
+        fi
 }
 
 function iorun() {
@@ -35,7 +35,7 @@ function iorun() {
                 echo
                 echo "defaults: input_file=input.txt and output_file=output.txt"
                 echo "          does a normal run if input.txt not found"
-                return 1;
+                return 0;
         fi
 
         extension="${1#*.}";
@@ -100,4 +100,4 @@ function iorun() {
         fi
 }
 
-iorun
+iorun $@

@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 function Mcpp() {
         name="$1";
-        g++ "$name" -o "${name%.*}"
+        g++ "$name" -o "${name%.*}" -Wall
 }
 
 function Rcpp() {
@@ -11,13 +11,13 @@ function Rcpp() {
                 ./"${1%.*}"
         fi
         if [ -f "${1%.*}" ]; then
-                rm "${1%.*}"
-        fi
+        	rm "${1%.*}"
+	fi
 }
 
 function Mc() {
         name="$1";
-        gcc "$name" -o "${name%.*}" -lm
+        gcc "$name" -o "${name%.*}" -lm -Wall
 }
 
 function Rc() {
@@ -26,9 +26,9 @@ function Rc() {
         if [ -f "${1%.*}" ]; then
                 ./"${1%.*}"
         fi
-
-        rm "${1%.*}"
-
+        if [ -f "${1%.*}" ]; then
+        	rm "${1%.*}"
+	fi
 }
 
 function run() {
@@ -49,4 +49,4 @@ function run() {
         fi
 }
 
-run
+run $@
