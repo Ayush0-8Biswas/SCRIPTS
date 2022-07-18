@@ -46,6 +46,8 @@ function run() {
                 ruby "$1"
         elif [[ "$extension" == "js" ]]; then
                 node "$1"
+        elif [[ "$extension" == "jl" ]]; then
+                julia "$1"
         fi
 }
 

@@ -1,0 +1,47 @@
+#!/usr/bin/bash
+
+function check() {
+    if [[ $1 == "" ]]; then
+        echo "Usage: checkGo.sh <code>"
+        exit 1
+    fi
+
+    if [[ -f $1/testcasegen.py ]]; then
+        python3 $1/testcasegen.py
+        mv input.txt $1/input.txt
+    else 
+        echo "No testcasegen.py found in $1"
+        exit 1
+    fi
+
+    if [[ -f $1/$1.go ]]; then
+        go run $1/$1.go < $1/input.txt > ./$1/GoOut.txt
+    else
+        rm ./$1/input.txt
+        echo "No $1.jl found in $1"
+        exit 1
+    fi
+
+    if [[ -f $1/$1.cpp ]]; then
+        g++ $1/$1.cpp -o ./$1/$1
+        ./$1/$1 < $1/input.txt > ./$1/CppOut.txt
+    else 
+        rm ./$1/input.txt
+        rm ./$1/GoOut.txt
+        echo "No $1.cpp found in $1"
+        exit 1
+    fi
+
+    if cmp -s $1/CppOut.txt $1/GoOut.txt; then
+        echo "PASS"
+        rm ./$1/input.txt
+        rm ./$1/GoOut.txt
+        rm ./$1/CppOut.txt
+    else
+        echo "FAIL"
+        diff ./$1/CppOut.txt ./$1/GoOut.txt
+    fi
+    rm ./$1/$1
+}
+
+check $@
